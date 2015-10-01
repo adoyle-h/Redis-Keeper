@@ -1,0 +1,23 @@
+{
+  "name": "Airdromes",
+  "version": "0.0.1",
+  "description": "a redis ORM in JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "redis",
+    "ORM"
+  ],
+  "author": "ADoyle",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^3.10.1"
+  },
+  "devDependencies": {
+    "config": "^1.16.0",
+    "ioredis": "^1.9.0",
+    "should": "^7.1.0"
+  }
+}
