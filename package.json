@@ -1,14 +1,15 @@
 {
-  "name": "Airdromes",
+  "name": "redis-keeper",
   "version": "0.0.1",
-  "description": "a redis ORM in JavaScript",
+  "description": "a redis key manager in JavaScript",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "redis",
-    "ORM"
+    "key",
+    "model"
   ],
   "author": "ADoyle",
   "license": "MIT",

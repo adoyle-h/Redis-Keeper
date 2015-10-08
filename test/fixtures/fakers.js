@@ -1,11 +1,11 @@
 'use strict';
 
-var Airdromes = require('../../lib/Airdromes');
+var Keeper = require('../../lib/keeper');
 var util = require('../../lib/util');
 var IORedis = require('ioredis');
 var config = require('../config');
 
-var TYPES = Airdromes.MODEL_TYPES;
+var TYPES = Keeper.MODEL_TYPES;
 
 exports.modelDefinitions = {
     post: {

@@ -2,39 +2,39 @@
 
 var should = require('should');
 
-describe('#Airdromes', function() {
+describe('#Keeper', function() {
     var util = require('../lib/util');
-    var Airdromes = require('../lib/Airdromes');
+    var Keeper = require('../lib/Keeper');
     var Fakers = require('./fixtures/fakers');
     var client = Fakers.redisClient;
     var modelDefinitions = Fakers.modelDefinitions;
-    var airdromes;
+    var keeper;
 
     before(function() {
-        airdromes = new Airdromes({
+        keeper = new Keeper({
             client: client,
         });
     });
 
     it('createModels(modelDefinitions) should return three models', function() {
-        var models = airdromes.createModels(modelDefinitions);
+        var models = keeper.createModels(modelDefinitions);
         models.should.have.length(3);
     });
 
-    it('airdromes.models should have three models', function() {
-        util.size(airdromes.models).should.equal(3);
+    it('keeper.models should have three models', function() {
+        util.size(keeper.models).should.equal(3);
     });
 
-    it('airdromes.Models should have these keys', function() {
+    it('keeper.Models should have these keys', function() {
         util.each([
             'STRING', 'HASH', 'LIST', 'SET', 'SORTED_SET'
         ], function(name) {
-            should.exist(airdromes.Models[name]);
+            should.exist(keeper.Models[name]);
         });
     });
 
-    it('airdromes.models should have three models', function(callback) {
-        var post = airdromes.model('post').get('1234');
+    it('keeper.models should have three models', function(callback) {
+        var post = keeper.model('post').get('1234');
         post.hset('c', 1, function(err, result) {
             result.should.equal(0);
             callback(err);
@@ -42,7 +42,7 @@ describe('#Airdromes', function() {
     });
 
     it('postModel.definitions should equal to modelDefinitions.post', function() {
-        var post = airdromes.model('post');
+        var post = keeper.model('post');
         post.definitions.should.equal(modelDefinitions.post);
     });
 });

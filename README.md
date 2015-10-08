@@ -1,3 +1,3 @@
-# Airdromes
+# Redis Keeper
 
-Airdromes is a redis ORM in JavaScript.
+A redis-keeper is a redis key manager in JavaScript.
