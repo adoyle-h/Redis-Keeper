@@ -126,6 +126,35 @@ describe('#Keeper', function() {
         });
     });
 
+
+    it('error should be delayed until callback', function(callback) {
+        var sample = keeper.model('sample').get();
+        var complex = keeper.model('complexKey').get({
+            a: 1,
+        });
+
+        async.parallel([
+            function(callback){
+                sample.set(1, function(err) {
+                    should.exist(err);
+                    err.message.should.equal('the param should be a Number or String.');
+                    callback();
+                });
+            },
+            function(callback){
+                complex.set(1, function(err) {
+                    should.exist(err);
+                    err.message.should.equal('the params do not match all the fields: a,b,c. Actual missing: b,c');
+                    callback();
+                });
+            },
+        ], function(err) {
+            callback(err);
+        });
+    });
+
+
+
     it('test hset and hget', function(callback) {
         var post = keeper.model('post').get('1234');
 
