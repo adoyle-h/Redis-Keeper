@@ -17,6 +17,7 @@
     "lodash": "^3.10.1"
   },
   "devDependencies": {
+    "async": "^1.5.0",
     "config": "^1.16.0",
     "ioredis": "^1.9.0",
     "should": "^7.1.0"

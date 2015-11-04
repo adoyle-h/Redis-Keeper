@@ -8,6 +8,10 @@ var config = require('../config');
 var TYPES = Keeper.MODEL_TYPES;
 
 exports.modelDefinitions = {
+    string: {
+        type: TYPES.STRING,
+        key: 'this:is:a:string'
+    },
     post: {
         type: TYPES.HASH,
         key: 'post:{postId}',
