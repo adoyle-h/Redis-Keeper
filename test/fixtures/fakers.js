@@ -12,10 +12,22 @@ exports.modelDefinitions = {
         type: TYPES.STRING,
         key: 'this:is:a:string'
     },
+    list: {
+        type: TYPES.LIST,
+        key: 'this:is:a:list',
+    },
+    set: {
+        type: TYPES.SET,
+        key: 'this:is:a:set',
+    },
+    sortedSet: {
+        type: TYPES.SORTED_SET,
+        key: 'this:is:a:list',
+    },
     post: {
         type: TYPES.HASH,
         key: 'post:{postId}',
-        fileds: {
+        fields: {
             count: {
                 like: 'like:count',
                 comment: 'comments:count',
@@ -31,9 +43,17 @@ exports.modelDefinitions = {
         type: TYPES.STRING,
         key: 'post:{postId}:comments:count',
     },
+    sample: {
+        type: TYPES.STRING,
+        key: 'sample:{sampleId}'
+    },
+    complexKey: {
+        type: TYPES.STRING,
+        key: 'a:complex:key:{a}:{b}:{c}'
+    },
 };
 
-function createClient() {
+function createRedisClient() {
     var redisClient = new IORedis({
         host: config.get('redis.host'),
         port: config.get('redis.port'),
@@ -66,4 +86,4 @@ function createClient() {
     return redisClient;
 }
 
-exports.redisClient = createClient();
+exports.createRedisClient = createRedisClient;

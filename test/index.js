@@ -6,13 +6,17 @@ describe('#Keeper', function() {
     var util = require('../lib/util');
     var Keeper = require('../lib/Keeper');
     var Fakers = require('./fixtures/fakers');
-    var client = Fakers.redisClient;
+    var client;
     var modelDefinitions = Fakers.modelDefinitions;
     var keeper;
 
-    before(function() {
+    before(function(callback) {
+        client = Fakers.createRedisClient();
         keeper = new Keeper({
             client: client,
+        });
+        client.flushall(function(err) {
+            callback(err);
         });
     });
 
@@ -33,20 +37,130 @@ describe('#Keeper', function() {
         });
     });
 
-    it('keeper.models should have three models', function(callback) {
-        var post = keeper.model('post').get('1234');
-        post.hset('c', 1, function(err, result) {
-            result.should.equal(0);
-            callback(err);
-        });
-    });
-
     it('postModel.definitions should equal to modelDefinitions.post', function() {
         var post = keeper.model('post');
         post.definitions.should.equal(modelDefinitions.post);
     });
 
-    it('set redis client after new Keeper()', function(callback) {
+
+
+    it('test the generated key', function(callback) {
+        var sample = keeper.model('sample').get('asd123');
+        var key = 'sample:asd123';
+
+        async.waterfall([
+            function(callback) {
+                client.exists(key, function(err, result) {
+                    if (err) return callback(err);
+                    result.should.equal(0);
+                    callback();
+                });
+            },
+            function(callback) {
+                sample.set(1, function(err, result) {
+                    if (err) return callback(err);
+                    result.should.equal('OK');
+                    callback();
+                });
+            },
+            function(callback) {
+                client.get(key, function(err, result) {
+                    if (err) return callback(err);
+                    result.should.equal('1');
+                    callback();
+                });
+            },
+            function(callback) {
+                sample.get(function(err, result) {
+                    if (err) return callback(err);
+                    result.should.equal('1');
+                    callback();
+                });
+            }
+        ], function(err) {
+            callback(err);
+        });
+    });
+
+    it('test the generated complex key', function(callback) {
+        var model = keeper.model('complexKey');
+        var complexKey = model.get({
+            a: 1,
+            b: 'b',
+            c: 3
+        });
+
+        var key = 'a:complex:key:1:b:3';
+
+        async.waterfall([
+            function(callback) {
+                client.exists(key, function(err, result) {
+                    if (err) return callback(err);
+                    result.should.equal(0);
+                    callback();
+                });
+            },
+            function(callback) {
+                complexKey.set(1, function(err, result) {
+                    if (err) return callback(err);
+                    result.should.equal('OK');
+                    callback();
+                });
+            },
+            function(callback) {
+                client.get(key, function(err, result) {
+                    if (err) return callback(err);
+                    result.should.equal('1');
+                    callback();
+                });
+            },
+            function(callback) {
+                complexKey.get(function(err, result) {
+                    if (err) return callback(err);
+                    result.should.equal('1');
+                    callback();
+                });
+            }
+        ], function(err) {
+            callback(err);
+        });
+    });
+
+    it('test hset and hget', function(callback) {
+        var post = keeper.model('post').get('1234');
+
+        var field = 'c';
+        var key = 'post:1234';
+        var value = 'ccc';
+
+        async.waterfall([
+            function(callback) {
+                post.hset(field, value, function(err, result) {
+                    if (err) return callback(err);
+                    result.should.equal(1);
+                    callback();
+                });
+            },
+            function(callback) {
+                client.exists(key, function(err, result) {
+                    if (err) return callback(err);
+                    result.should.equal(1);
+                    callback();
+                });
+            },
+            function(callback) {
+                post.hget(field, function(err, result) {
+                    if (err) return callback(err);
+                    result.should.equal(value);
+                    callback();
+                });
+            }
+        ], function(err) {
+            callback(err);
+        });
+    });
+
+    it('set redis client after new Keeper() && test set and get', function(callback) {
         var keeper2 = new Keeper();
         keeper2.setClient(client);
         keeper2.createModels(modelDefinitions);
