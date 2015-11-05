@@ -215,4 +215,38 @@ describe('#Keeper', function() {
             callback(err);
         });
     });
+
+    it('test uppercase commands', function(callback) {
+        var post = keeper.model('post').get('uppercase');
+
+        var field = 'c';
+        var key = 'post:uppercase';
+        var value = 'uppercase';
+
+        async.waterfall([
+            function(callback) {
+                post.HSET(field, value, function(err, result) {
+                    if (err) return callback(err);
+                    result.should.equal(1);
+                    callback();
+                });
+            },
+            function(callback) {
+                client.exists(key, function(err, result) {
+                    if (err) return callback(err);
+                    result.should.equal(1);
+                    callback();
+                });
+            },
+            function(callback) {
+                post.HGET(field, function(err, result) {
+                    if (err) return callback(err);
+                    result.should.equal(value);
+                    callback();
+                });
+            }
+        ], function(err) {
+            callback(err);
+        });
+    });
 });
